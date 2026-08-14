@@ -5,38 +5,43 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import heroBg from "../../assets/hero-bg.jpg";
 import homeAboutImg from "../../assets/home-about.png";
 
+type FeaturedProject = {
+  id: number;
+  title: string;
+  category: "House" | "Construction";
+  load: () => Promise<string>;
+};
+
 const HERO_IMG = heroBg;
 const ABOUT_IMG = homeAboutImg;
 const REVIEWS_URL = "https://www.google.com/maps/place/BL+Construction+and+design/@12.8946557,79.1288658,17z/data=!4m18!1m9!3m8!1s0x3bad3900361f4713:0x191e58f4cda78c23!2sBL+Construction+and+design!8m2!3d12.8946557!4d79.1314407!9m1!1b1!16s%2Fg%2F11y54zscr0!3m7!1s0x3bad3900361f4713:0x191e58f4cda78c23!8m2!3d12.8946557!4d79.1314407!9m1!1b1!16s%2Fg%2F11y54zscr0?entry=ttu&g_ep=EgoyMDI2MDMxOC4xIKXMDSoASAFQAw%3D%3D";
 
 const homeDesignModules = import.meta.glob("/src/assets/photos/house-design/*.{png,jpg,jpeg,webp}", {
-  eager: true,
   import: "default",
-}) as Record<string, string>;
+}) as Record<string, () => Promise<string>>;
 
 const homeBuilderModules = import.meta.glob("/src/assets/photos/builders/*.{png,jpg,jpeg,webp}", {
-  eager: true,
   import: "default",
-}) as Record<string, string>;
+}) as Record<string, () => Promise<string>>;
 
-const PROJECTS = [
+const PROJECTS: FeaturedProject[] = [
   ...Object.entries(homeDesignModules)
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(0, 2)
-    .map(([, img], index) => ({
+    .map(([, load], index) => ({
       id: index + 1,
       title: "BL House Design",
       category: "House",
-      img,
+      load,
     })),
   ...Object.entries(homeBuilderModules)
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(0, 1)
-    .map(([, img], index) => ({
+    .map(([, load], index) => ({
       id: index + 101,
-      title: "BL Builder Work",
-      category: "Builders",
-      img,
+      title: "BL Construction Work",
+      category: "Construction",
+      load,
     })),
 ];
 
@@ -124,6 +129,7 @@ export function Home() {
   const [testimonialIdx, setTestimonialIdx] = useState(0);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
   const [hoveredService, setHoveredService] = useState<number | null>(null);
+  const [featuredProjects, setFeaturedProjects] = useState<Array<{ id: number; title: string; category: "House" | "Construction"; img: string }>>([]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -135,6 +141,31 @@ export function Home() {
 
   const prev = () => setTestimonialIdx((i) => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
   const next = () => setTestimonialIdx((i) => (i + 1) % TESTIMONIALS.length);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadFeaturedProjects() {
+      const results = await Promise.all(
+        PROJECTS.map(async (project) => ({
+          id: project.id,
+          title: project.title,
+          category: project.category,
+          img: await project.load(),
+        }))
+      );
+
+      if (!cancelled) {
+        setFeaturedProjects(results);
+      }
+    }
+
+    loadFeaturedProjects();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div>
@@ -402,7 +433,7 @@ export function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PROJECTS.map((project) => (
+            {featuredProjects.map((project) => (
               <div
                 key={project.id}
                 className="relative overflow-hidden rounded-2xl cursor-pointer group"
@@ -428,7 +459,7 @@ export function Home() {
                     {project.category}
                   </div>
                   <div style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, color: "white", fontSize: "1rem" }}>
-                    {project.category === "House" ? "Modern House Design" : "Builder Work"}
+                    {project.category === "House" ? "Modern House Design" : "Construction Work"}
                   </div>
                   {hoveredProject === project.id && (
                     <Link

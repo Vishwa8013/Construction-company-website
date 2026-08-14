@@ -1,0 +1,24 @@
+{
+  "name": "bl-construction-backend",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "seed": "node src/scripts/seedFromFrontend.js",
+    "check": "node -e \"import('./src/app.js').then(() => console.log('backend ok'))\""
+  },
+  "dependencies": {
+    "cors": "2.8.5",
+    "dotenv": "16.6.1",
+    "express": "5.1.0",
+    "jsonwebtoken": "9.0.2",
+    "mime-types": "3.0.1",
+    "multer": "2.0.2",
+    "nanoid": "5.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.10"
+  }
+}

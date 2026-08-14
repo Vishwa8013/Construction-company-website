@@ -51,12 +51,13 @@ export function Footer() {
               Quick Links
             </h4>
             <ul className="flex flex-col gap-3">
-              {[
+            {[
                 { label: "Home", path: "/" },
                 { label: "About Us", path: "/about" },
                 { label: "Services", path: "/services" },
                 { label: "Projects", path: "/projects" },
                 { label: "Contact", path: "/contact" },
+                { label: "Portal", path: "/portal" },
               ].map((item) => (
                 <li key={item.path}>
                   <Link

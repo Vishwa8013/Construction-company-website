@@ -1,8 +1,13 @@
 node_modules/
+backend/node_modules/
 dist/
 .env
 .env.local
 .env.*.local
+backend/.env
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/data/*.local.json
 .DS_Store
 Thumbs.db
 .firebase/
