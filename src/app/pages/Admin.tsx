@@ -8,6 +8,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   LogOut,
+  Menu,
   RefreshCw,
   Save,
   ShieldCheck,
@@ -75,6 +76,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
 
 export function Admin() {
   const [activeSection, setActiveSection] = useState<AdminSection>("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [token, setToken] = useState<string>(() => localStorage.getItem(AUTH_TOKEN_KEY) || "");
   const [me, setMe] = useState<AdminUser | null>(null);
   const [projects, setProjects] = useState<AdminProject[]>([]);
@@ -206,6 +208,7 @@ export function Admin() {
     setToken("");
     setMe(null);
     setActiveSection("dashboard");
+    setSidebarOpen(true);
     setSuccess("");
     setError("");
   }
@@ -516,16 +519,37 @@ export function Admin() {
     >
       <style>{adminStyles}</style>
       <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-[320px,1fr] gap-6 xl:items-center">
+        <div className="grid grid-cols-1 xl:grid-cols-[auto,1fr] gap-6 xl:items-start">
           <aside
-            className="rounded-[2rem] p-6 h-fit xl:sticky xl:top-1/2 xl:-translate-y-1/2"
+            className="rounded-[2rem] p-6 h-fit xl:sticky xl:top-6"
             style={{
               backgroundColor: "#FFFDF9",
               border: "1px solid rgba(92,71,43,0.08)",
               boxShadow: "0 22px 55px rgba(31,41,51,0.08)",
               ...panelRiseStyle,
+              width: sidebarOpen ? "320px" : "76px",
+              transition: "width 220ms ease",
+              overflow: "hidden",
             }}
           >
+            <button
+              type="button"
+              onClick={() => setSidebarOpen((value) => !value)}
+              aria-label={sidebarOpen ? "Collapse menu" : "Open menu"}
+              className="inline-flex items-center justify-center rounded-2xl mb-6"
+              style={{
+                width: "44px",
+                height: "44px",
+                backgroundColor: "#FFF7EF",
+                border: "1px solid rgba(92,71,43,0.10)",
+                color: "#8B5E34",
+              }}
+            >
+              <Menu size={22} />
+            </button>
+
+            {sidebarOpen && (
+              <>
             <Link
               to="/"
               className="inline-flex items-center gap-2 mb-6"
@@ -589,6 +613,8 @@ export function Admin() {
               <LogOut size={16} />
               Logout
             </button>
+              </>
+            )}
           </aside>
 
           <section
@@ -839,7 +865,7 @@ export function Admin() {
                             </div>
                           ) : (
                             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                              <div className="min-w-0">
+                              <div className="min-w-0 flex-1">
                                 <div className="flex flex-wrap items-center gap-3 mb-3">
                                   <span className="inline-flex items-center gap-2 rounded-full px-3 py-1.5" style={{ backgroundColor: "#FFFDF9", color: "#8B5E34", fontWeight: 700, fontSize: "0.78rem" }}>
                                     {getTypeIcon(project.type)}
@@ -858,6 +884,37 @@ export function Admin() {
                                   <div>Added: {new Date(project.createdAt).toLocaleString()}</div>
                                 </div>
                               </div>
+
+                              <a
+                                href={project.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-shrink-0 overflow-hidden rounded-2xl border"
+                                style={{
+                                  width: "140px",
+                                  height: "100px",
+                                  backgroundColor: "#FFFDF9",
+                                  borderColor: "rgba(92,71,43,0.08)",
+                                  textDecoration: "none",
+                                }}
+                                aria-label={`Open preview for ${project.title || project.originalName}`}
+                              >
+                                {project.type === "image" ? (
+                                  <img
+                                    src={project.url}
+                                    alt={project.title || project.originalName}
+                                    className="h-full w-full object-cover"
+                                  />
+                                ) : project.type === "video" ? (
+                                  <div className="h-full w-full flex items-center justify-center" style={{ backgroundColor: "#F5EEE2", color: "#8B5E34" }}>
+                                    <Video size={22} />
+                                  </div>
+                                ) : (
+                                  <div className="h-full w-full flex items-center justify-center" style={{ backgroundColor: "#F5EEE2", color: "#8B5E34" }}>
+                                    <FileText size={22} />
+                                  </div>
+                                )}
+                              </a>
 
                               <div className="flex flex-wrap gap-3">
                                 <a
