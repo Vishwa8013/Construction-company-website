@@ -10,7 +10,7 @@ const rootDir = path.resolve(__dirname, "..");
 
 export const config = {
   port: Number(process.env.PORT || 4000),
-  clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+  clientOrigin: (process.env.CLIENT_ORIGIN || "http://localhost:5173").replace(/\/$/, ""),
   dataFile: path.resolve(rootDir, process.env.DATA_FILE || "./data/projects.json"),
   usersFile: path.resolve(rootDir, process.env.USERS_FILE || "./data/users.json"),
   uploadDir: path.resolve(rootDir, process.env.UPLOAD_DIR || "./uploads"),
