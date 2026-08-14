@@ -42,7 +42,7 @@ type AdminUser = {
   createdAt: string;
 };
 
-const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined)?.replace(/\/$/, "") || "http://localhost:4000";
+const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined)?.replace(/\/$/, "") || "https://construction-company-website-9y9x.onrender.com";
 const AUTH_TOKEN_KEY = "bl-admin-token";
 const CATEGORY_OPTIONS: ProjectCategory[] = ["House Design", "Construction", "Interior Design", "Videos"];
 const SECTION_ITEMS: Array<{ id: AdminSection; label: string; icon: typeof LayoutDashboard }> = [

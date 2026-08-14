@@ -59,7 +59,7 @@ const CATEGORY_CONFIG: Record<
   },
 };
 
-const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined)?.replace(/\/$/, "") || "http://localhost:4000";
+const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined)?.replace(/\/$/, "") || "https://construction-company-website-9y9x.onrender.com";
 
 const imageModules = import.meta.glob("/src/assets/photos/house-design/*.{png,jpg,jpeg,webp}", {
   import: "default",
