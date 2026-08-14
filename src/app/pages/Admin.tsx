@@ -528,10 +528,10 @@ export function Admin() {
       }}
     >
       <style>{adminStyles}</style>
-      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-[auto,1fr] gap-6 xl:items-start">
+      <div className="max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-[300px,minmax(0,1fr)] gap-6 xl:items-start">
           <aside
-            className="rounded-[2rem] p-6 h-fit xl:sticky xl:top-6"
+            className="rounded-[2rem] p-6 h-fit xl:sticky xl:top-6 self-start"
             style={{
               backgroundColor: "#FFFDF9",
               border: "1px solid rgba(92,71,43,0.08)",
@@ -628,7 +628,7 @@ export function Admin() {
           </aside>
 
           <section
-            className="rounded-[2rem] p-6 sm:p-8"
+            className="rounded-[2rem] p-6 sm:p-8 self-start min-w-0"
             style={{
               backgroundColor: "#FFFDF9",
               border: "1px solid rgba(92,71,43,0.08)",
@@ -654,18 +654,50 @@ export function Admin() {
               <div style={{ color: "#64748B" }}>Loading admin workspace...</div>
             ) : (
               <>
+                <div
+                  className="rounded-[1.75rem] p-6 sm:p-7 mb-6"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(139,94,52,0.10), rgba(245,238,226,0.88))",
+                    border: "1px solid rgba(92,71,43,0.08)",
+                  }}
+                >
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                      <div style={{ color: "#8B5E34", fontSize: "0.78rem", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 700, marginBottom: "0.6rem" }}>
+                        Admin Workspace
+                      </div>
+                      <h2 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: "2.35rem", lineHeight: 1.05, marginBottom: "0.5rem" }}>
+                        BL Backend UI
+                      </h2>
+                      <p style={{ color: "#5E6770", lineHeight: 1.8, maxWidth: "48rem" }}>
+                        Manage uploads, edit project items, filter by media type, and handle members from one place.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection("upload")}
+                        className="inline-flex items-center gap-2 rounded-full px-5 py-3"
+                        style={{ backgroundColor: "#8B5E34", color: "#FFFDF9", fontWeight: 700, border: "none" }}
+                      >
+                        <Upload size={16} />
+                        New Upload
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection("manager")}
+                        className="inline-flex items-center gap-2 rounded-full px-5 py-3"
+                        style={{ backgroundColor: "#FFFDF9", color: "#8B5E34", fontWeight: 700, border: "1px solid rgba(92,71,43,0.10)" }}
+                      >
+                        <FolderKanban size={16} />
+                        Open Manager
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
                 {activeSection === "dashboard" && (
                   <div>
-                    <div style={{ color: "#8B5E34", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: "0.65rem" }}>
-                      Dashboard
-                    </div>
-                    <h2 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: "2.2rem", marginBottom: "0.75rem" }}>
-                      Project overview
-                    </h2>
-                    <p style={{ color: "#5E6770", lineHeight: 1.8, marginBottom: "1.75rem" }}>
-                      This dashboard gives you a quick view of the backend content library, category split, and who currently has access to manage the system.
-                    </p>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
                       <StatCard label="Total projects" value={projects.length} />
                       <StatCard label="Team members" value={isAdmin ? members.length : 1} />
@@ -688,9 +720,6 @@ export function Admin() {
 
                 {activeSection === "upload" && (
                   <div>
-                    <div style={{ color: "#8B5E34", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: "0.65rem" }}>
-                      Upload
-                    </div>
                     <h2 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: "2.2rem", marginBottom: "0.75rem" }}>
                       Upload new project media
                     </h2>
@@ -772,9 +801,6 @@ export function Admin() {
 
                 {activeSection === "manager" && (
                   <div>
-                    <div style={{ color: "#8B5E34", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: "0.65rem" }}>
-                      Manager
-                    </div>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                       <div>
                         <h2 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: "2.2rem", marginBottom: "0.55rem" }}>
@@ -984,9 +1010,6 @@ export function Admin() {
 
                 {activeSection === "members" && isAdmin && (
                   <div>
-                    <div style={{ color: "#8B5E34", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: "0.65rem" }}>
-                      Manage Members
-                    </div>
                     <h2 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: "2.2rem", marginBottom: "0.75rem" }}>
                       Team authorization
                     </h2>
