@@ -111,6 +111,9 @@ export function Admin() {
   const [editingMemberRole, setEditingMemberRole] = useState<UserRole>("member");
 
   const isAdmin = me?.role === "admin";
+  const panelRiseStyle = {
+    animation: "bl-panel-rise 0.7s ease-out both",
+  } as const;
 
   async function apiFetch(path: string, options: RequestInit = {}) {
     const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -511,11 +514,17 @@ export function Admin() {
         fontFamily: "'Inter', sans-serif",
       }}
     >
+      <style>{adminStyles}</style>
       <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-[280px,1fr] gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-[320px,1fr] gap-6 xl:items-center">
           <aside
-            className="rounded-[2rem] p-6 h-fit xl:sticky xl:top-6"
-            style={{ backgroundColor: "#FFFDF9", border: "1px solid rgba(92,71,43,0.08)", boxShadow: "0 22px 55px rgba(31,41,51,0.08)" }}
+            className="rounded-[2rem] p-6 h-fit xl:sticky xl:top-1/2 xl:-translate-y-1/2"
+            style={{
+              backgroundColor: "#FFFDF9",
+              border: "1px solid rgba(92,71,43,0.08)",
+              boxShadow: "0 22px 55px rgba(31,41,51,0.08)",
+              ...panelRiseStyle,
+            }}
           >
             <Link
               to="/"
@@ -559,6 +568,9 @@ export function Admin() {
                       color: active ? "#FFFDF9" : "#334155",
                       border: active ? "none" : "1px solid rgba(92,71,43,0.08)",
                       fontWeight: 700,
+                      transform: active ? "translateX(6px)" : "translateX(0)",
+                      transition: "transform 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease",
+                      boxShadow: active ? "0 12px 28px rgba(139,94,52,0.22)" : "none",
                     }}
                   >
                     <Icon size={18} />
@@ -581,7 +593,13 @@ export function Admin() {
 
           <section
             className="rounded-[2rem] p-6 sm:p-8"
-            style={{ backgroundColor: "#FFFDF9", border: "1px solid rgba(92,71,43,0.08)", boxShadow: "0 22px 55px rgba(31,41,51,0.08)" }}
+            style={{
+              backgroundColor: "#FFFDF9",
+              border: "1px solid rgba(92,71,43,0.08)",
+              boxShadow: "0 22px 55px rgba(31,41,51,0.08)",
+              ...panelRiseStyle,
+              animationDelay: "90ms",
+            }}
           >
             {(error || success) && (
               <div
@@ -1035,3 +1053,16 @@ export function Admin() {
     </div>
   );
 }
+
+const adminStyles = `
+@keyframes bl-panel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+`;
