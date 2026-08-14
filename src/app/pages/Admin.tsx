@@ -22,6 +22,7 @@ type ProjectCategory = "House Design" | "Construction" | "Interior Design" | "Vi
 type ProjectType = "image" | "video" | "document";
 type UserRole = "admin" | "member";
 type AdminSection = "dashboard" | "upload" | "manager" | "members";
+type ManagerFilter = "All" | "Photos" | "Videos" | "Documents";
 
 type AdminProject = {
   id: string;
@@ -96,6 +97,7 @@ export function Admin() {
   const [file, setFile] = useState<File | null>(null);
 
   const [projectFilter, setProjectFilter] = useState<"All" | ProjectCategory>("All");
+  const [managerFilter, setManagerFilter] = useState<ManagerFilter>("All");
   const [editingProjectId, setEditingProjectId] = useState("");
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -394,6 +396,14 @@ export function Admin() {
 
   const filteredProjects =
     projectFilter === "All" ? projects : projects.filter((project) => project.category === projectFilter);
+  const filteredManagerProjects =
+    managerFilter === "All"
+      ? filteredProjects
+      : filteredProjects.filter((project) => {
+          if (managerFilter === "Photos") return project.type === "image";
+          if (managerFilter === "Videos") return project.type === "video";
+          return project.type === "document";
+        });
 
   if (!token || !me) {
     return (
@@ -804,8 +814,27 @@ export function Admin() {
                       ))}
                     </div>
 
+                    <div className="flex flex-wrap gap-3 mb-6">
+                      {(["All", "Photos", "Videos", "Documents"] as ManagerFilter[]).map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => setManagerFilter(option)}
+                          className="rounded-full px-4 py-2"
+                          style={{
+                            backgroundColor: managerFilter === option ? "#8B5E34" : "#FFFDF9",
+                            color: managerFilter === option ? "#FFFDF9" : "#334155",
+                            border: managerFilter === option ? "none" : "1px solid rgba(92,71,43,0.08)",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+
                     <div className="space-y-4">
-                      {filteredProjects.map((project) => (
+                      {filteredManagerProjects.map((project) => (
                         <article key={project.id} className="rounded-3xl p-5" style={{ backgroundColor: "#F8F3EA", border: "1px solid rgba(92,71,43,0.08)" }}>
                           {editingProjectId === project.id ? (
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
